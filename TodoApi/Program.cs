@@ -13,18 +13,17 @@ builder.Services.AddSwaggerGen(c =>
 // הוספת קונפיגורציה של CORS עם דומיין ספציפי
 builder.Services.AddCors(option => option.AddPolicy("AllowSpecificOrigin", p =>
 {
-    p.WithOrigins("https://todolistreact-master-vs8d.onrender.com") // כתובת האתר שלך ב-React
+    p.WithOrigins("https://todolistreact-master-vs8d.onrender.com")
         .AllowAnyMethod()
         .AllowAnyHeader();
 }));
 
 builder.Services.AddDbContext<ToDoDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("ToDoDb"),
+options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"),
         new MySqlServerVersion(new Version(8, 0, 41))));
 
 var app = builder.Build();
 
-// הפעלת CORS עם הפוליסי המיועד
 app.UseCors("AllowSpecificOrigin");
 
 app.UseSwagger();
