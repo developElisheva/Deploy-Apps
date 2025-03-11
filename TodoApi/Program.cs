@@ -19,11 +19,11 @@ options.UseMySql(builder.Configuration.GetConnectionString("ToDoDb"),
 
 var app = builder.Build();
 app.UseCors("AllowAll");
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.MapGet("/", () => "hello world");
 
 app.MapGet("/getAll", async (ToDoDbContext context) =>
