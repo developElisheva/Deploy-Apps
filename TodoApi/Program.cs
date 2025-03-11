@@ -4,6 +4,7 @@ using TodoApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// הוספת קונפיגורציה של Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -18,24 +19,29 @@ builder.Services.AddCors(option => option.AddPolicy("AllowSpecificOrigin", p =>
         .AllowAnyHeader();
 }));
 
+// הוספת ה-DB Context עם החיבור ל-MySQL
 builder.Services.AddDbContext<ToDoDbContext>(options =>
-options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"),
-        new MySqlServerVersion(new Version(8, 0, 41))));
+    options.UseMySql(builder.Configuration.GetConnectionString("ToDoDB"),
+        new MySqlServerVersion(new Version(8, 0, 41))));  // שים לב לגרסה כאן
 
 var app = builder.Build();
 
+// הפעלת CORS
 app.UseCors("AllowSpecificOrigin");
 
+// הפעלת Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/", () => "hello world");
 
+// API לקבלת כל הרשומות
 app.MapGet("/getAll", async (ToDoDbContext context) =>
 {
     return await context.Items.ToListAsync();
 });
 
+// API להוספת פריט חדש
 app.MapPost("/add", async (ToDoDbContext db, string Name) =>
 {
     var item = new Item { Name = Name, IsComplete = false };
@@ -44,6 +50,7 @@ app.MapPost("/add", async (ToDoDbContext db, string Name) =>
     return "Item added";
 });
 
+// API לעדכון פריט
 app.MapPatch("/update/{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
 {
     var existingItem = await db.Items.FindAsync(id);
@@ -59,6 +66,7 @@ app.MapPatch("/update/{id}", async (ToDoDbContext db, int id, bool IsComplete) =
     return Results.Ok("Item updated");
 });
 
+// API למחיקת פריט
 app.MapDelete("/deleteItem/{id}", async (ToDoDbContext context, int id) =>
 {
     var existingItem = await context.Items.FindAsync(id);
