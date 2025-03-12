@@ -5,10 +5,17 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`getAll`)
-      return result.data;
+      const result = await axios.get(`getAll`);
+      console.log("Full API Response:", result); // מדפיס את כל ה-Response
+      console.log("Raw response from API:", result.data); // מדפיס את ה-data בלבד
+      if (!Array.isArray(result.data.data)) {
+        console.error("Error: API response is not an array!", result.data);
+        return []; // מחזיר מערך ריק כדי למנוע קריסה
+      }
+      return result.data.data;
     } catch (err) {
       console.error('Error getting tasks:', err);
+      return [];
     }
   },
 
@@ -27,9 +34,9 @@ export default {
     try {
       const result = await axios.patch(`update/${id}`, isComplete, {
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         }
-    });      return result.data;
+      }); return result.data;
     } catch (err) {
       console.error('Error setting completion:', err);
     }
