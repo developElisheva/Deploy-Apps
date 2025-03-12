@@ -7,17 +7,23 @@ export default {
     try {
       const result = await axios.get(`getAll`);
       console.log("Full API Response:", result); // מדפיס את כל ה-Response
-      console.log("Raw response from API:", result.data); // מדפיס את ה-data בלבד
-      if (!Array.isArray(result.data)) {
-        console.error("Error: API response is not an array!", result.data);
-        return []; // מחזיר מערך ריק כדי למנוע קריסה
+      if (result.status === 200) {
+        console.log("Raw response from API:", result.data); // מדפיס את ה-data בלבד
+        if (Array.isArray(result.data)) {
+          return result.data;
+        } else {
+          console.error("Error: API response is not an array!", result.data);
+        }
+      } else {
+        console.error("Error: Received non-OK status code", result.status);
       }
-      return result.data;
+      return [];
     } catch (err) {
       console.error('Error getting tasks:', err);
       return [];
     }
   },
+  
 
   addTask: async (name) => {
     console.log('addTask', name)
