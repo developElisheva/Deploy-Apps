@@ -5,14 +5,12 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`getAll`);
-      return typeof result.data === "string" ? JSON.parse(result.data) : result.data;
+      const result = await axios.get(`getAll`)
+      return result.data;
     } catch (err) {
       console.error('Error getting tasks:', err);
-      return [];
     }
-  }
-  ,
+  },
 
   addTask: async (name) => {
     console.log('addTask', name)
@@ -27,8 +25,11 @@ export default {
   setCompleted: async (id, isComplete) => {
     console.log('setCompleted', { id, isComplete });
     try {
-      const result = await axios.patch(`update/${id}?IsComplete=${isComplete}`);
-      return result.data;
+      const result = await axios.patch(`update/${id}`, isComplete, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });      return result.data;
     } catch (err) {
       console.error('Error setting completion:', err);
     }
@@ -37,7 +38,7 @@ export default {
   deleteTask: async (id) => {
     console.log('deleteTask', id);
     try {
-      const result = await axios.delete(`/deleteItem/${id}`);
+      const result = await axios.delete(`/delete/${id}`);
       return result.data;
     } catch (err) {
       console.error('Error deleting task:', err);
