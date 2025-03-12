@@ -4,6 +4,7 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 
 export default {
   getTasks: async () => {
+    console.log("getTasks() is running...")
     try {
       const result = await axios.get(`getAll`);
       console.log("Raw response from API:", result.data);
