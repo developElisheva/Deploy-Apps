@@ -5,7 +5,8 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`getAll`)
+      const result = await axios.get(`getAll`);
+      console.log("Raw response from API:", result.data);
       return result.data;
     } catch (err) {
       console.error('Error getting tasks:', err);
@@ -27,9 +28,9 @@ export default {
     try {
       const result = await axios.patch(`update/${id}`, isComplete, {
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         }
-    });      return result.data;
+      }); return result.data;
     } catch (err) {
       console.error('Error setting completion:', err);
     }
