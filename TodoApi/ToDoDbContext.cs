@@ -26,7 +26,7 @@ public partial class ToDoDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseMySql(
-        "server=btvqhj0fvvfga3aibazw-mysql.services.clever-cloud.com;database=btvqhj0fvvfga3aibazw;user=uo3ow8vbc7blfkf3;password=2u4UKfA8FmRVVvwQy8qh",
+            "server=btvqhj0fvvfga3aibazw-mysql.services.clever-cloud.com;database=ToDoDB;user=root;password=eli@2107",
             Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.41-mysql"),
             mySqlOptions => mySqlOptions.EnableRetryOnFailure()  // הוספת האפשרות לשחזור אוטומטי במקרה של כשל זמני
         );
