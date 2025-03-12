@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using TodoApi;
 
 var builder = WebApplication.CreateBuilder(args);
+Console.WriteLine($"Connection String: {builder.Configuration.GetConnectionString("ToDoDB")}");
 
 // הוספת קונפיגורציה של Swagger
 builder.Services.AddEndpointsApiExplorer();
