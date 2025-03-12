@@ -8,7 +8,12 @@ export default {
       console.log('Requesting:', `${process.env.REACT_APP_URL}/selectAll`);
 
       const result = await axios.get(`${process.env.REACT_APP_URL}/selectAll`);
-      console.log('Data received:', result.data);
+      console.log('Data received from API:', result.data);
+      if (Array.isArray(result.data)) {
+        console.log('Data is array:', result.data);
+      } else {
+        console.log('Data is not an array');
+      }
 
       return result.data || []; // מחזיר מערך ריק אם הנתונים הם undefined
     } catch (err) {
