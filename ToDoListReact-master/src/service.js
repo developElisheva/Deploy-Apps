@@ -4,13 +4,18 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 
 export default {
   getTasks: async () => {
-    console.log("getTasks() is running...")
     try {
       const result = await axios.get(`getAll`);
-      console.log("Raw response from API:", result.data);
+      console.log("Full API Response:", result); // מדפיס את כל ה-Response
+      console.log("Raw response from API:", result.data); // מדפיס את ה-data בלבד
+      if (!Array.isArray(result.data)) {
+        console.error("Error: API response is not an array!", result.data);
+        return []; // מחזיר מערך ריק כדי למנוע קריסה
+      }
       return result.data;
     } catch (err) {
       console.error('Error getting tasks:', err);
+      return [];
     }
   },
 
