@@ -7,10 +7,13 @@ export default {
     try {
       const result = await axios.get("https://todoapi-2l8v.onrender.com/getAll", {
         headers: {
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'  // הוסף את הכותרת הזו אם ה-API מצפה לה
         }
       });
-            console.log("Full API Response:", result);
+      console.log('Raw response:', result.data);  // בדוק את התגובה הגולמית
+
+      console.log("Full API Response:", result);
       if (result.status === 200) {
         console.log("Raw response from API:", result.data);
         if (Array.isArray(result.data) && result.data.length > 0) {
@@ -29,7 +32,7 @@ export default {
     }
   }
   ,
-  
+
 
   addTask: async (name) => {
     console.log('addTask', name)
