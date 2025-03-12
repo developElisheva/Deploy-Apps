@@ -6,7 +6,7 @@ export default {
   getTasks: async () => {
     try {
       const result = await axios.get(`getAll`)
-      return result.data || [];
+      return result.data ;
     } catch (err) {
       console.error('Error getting tasks:', err);
     }
