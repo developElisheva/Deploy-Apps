@@ -17,7 +17,7 @@ export default {
   addTask: async (name) => {
     console.log('addTask', name)
     try {
-      const result = await axios.post(`add?Name=${encodeURIComponent(name)}`);
+      const result = await axios.post(`add?Name=${encodeURIComponent(name)}`)||[];
       return result.data;
     } catch (err) {
       console.error('Error adding task:', err);
