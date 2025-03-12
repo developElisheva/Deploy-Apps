@@ -5,13 +5,15 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`getAll`)
-      return result.data ;
+      const result = await axios.get(`getAll`);
+      console.log("Raw response:", result);
+      console.log("Data:", result.data, "Type:", typeof result.data, "Is Array:", Array.isArray(result.data));
+      return Array.isArray(result.data) ? result.data : (result.data.data || []); // ניסיון לשלוף מתוך אובייקט אם עטוף
     } catch (err) {
       console.error('Error getting tasks:', err);
+      return [];
     }
   },
-
   addTask: async (name) => {
     console.log('addTask', name)
     try {
