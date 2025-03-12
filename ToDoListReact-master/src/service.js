@@ -5,14 +5,15 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`getAll`);
-      console.log("Full API Response:", result); // מדפיס את כל ה-Response
+      const result = await axios.get(`${process.env.REACT_APP_URL}/getAll`);
+      console.log("Full API Response:", result);
       if (result.status === 200) {
-        console.log("Raw response from API:", result.data); // מדפיס את ה-data בלבד
-        if (Array.isArray(result.data)) {
+        console.log("Raw response from API:", result.data);
+        if (Array.isArray(result.data) && result.data.length > 0) {
           return result.data;
         } else {
-          console.error("Error: API response is not an array!", result.data);
+          console.error("Error: API response is empty or not an array!", result.data);
+          return [];
         }
       } else {
         console.error("Error: Received non-OK status code", result.status);
@@ -22,7 +23,8 @@ export default {
       console.error('Error getting tasks:', err);
       return [];
     }
-  },
+  }
+  ,
   
 
   addTask: async (name) => {
