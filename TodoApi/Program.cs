@@ -36,10 +36,16 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/", () => "ToDoApi is running!");
+// app.MapGet("/getAll", async (ToDoDbContext db) =>
+// {
+//     return await db.Items.ToListAsync();
+// });
 app.MapGet("/getAll", async (ToDoDbContext db) =>
 {
-    return await db.Items.ToListAsync();
+    var items = await db.Items.ToListAsync();
+    return Results.Ok(items); // מחזיר JSON תקין
 });
+
 app.MapPost("/add", async (ToDoDbContext db, string Name) =>
 {
     var item = new Item { Name = Name, IsComplete = false };
