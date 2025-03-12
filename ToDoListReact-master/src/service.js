@@ -7,6 +7,8 @@ export default {
     try {
       console.log('Requesting:', `${process.env.REACT_APP_URL}/selectAll`);
 
+      console.log('Requesting:', `${process.env.REACT_APP_URL}/selectAll`);
+
       const result = await axios.get(`${process.env.REACT_APP_URL}/selectAll`);
       console.log('Data received from API:', result.data);
       if (Array.isArray(result.data)) {
