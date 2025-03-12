@@ -7,7 +7,6 @@ function App() {
 
   async function getTodos() {
     const todos = await service.getTasks();
-    console.log("Data received from API:", todos, "Type:", typeof todos, "Is Array:", Array.isArray(todos));
     setTodos(todos);
   }
 
