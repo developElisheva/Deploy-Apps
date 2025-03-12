@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+console.log('REACT_APP_URL from env:', process.env.REACT_APP_URL);
+
+const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
+console.log('Using API base URL:', API_BASE_URL);
+
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_URL
+  baseURL: API_BASE_URL
 });
 
 apiClient.interceptors.request.use(config => {
@@ -13,18 +18,9 @@ export default {
   getTasks: async () => {
     try {
       const result = await apiClient.get('/selectAll');
-      console.log('Data received from API:', result.data);
-      
-      if (Array.isArray(result.data)) {
-        console.log('Data is array with length:', result.data.length);
-      } else {
-        console.log('Data is not an array:', typeof result.data);
-      }
-
       return result.data || [];
     } catch (err) {
       console.error('שגיאה בהבאת המשימות:', err);
-      // Log more details about the error
       if (err.response) {
         console.error('Error response:', {
           status: err.response.status,
