@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-// const apiUrl = "http://localhost:5011"
-// axios.defaults.baseURL = "http://localhost:5011/";
 axios.defaults.baseURL = process.env.REACT_APP_URL;
 
 export default {
   getTasks: async () => {
     try {
       const result = await axios.get(`getAll`)
-      return result.data;
+      return result.data || [];
     } catch (err) {
       console.error('Error getting tasks:', err);
     }
