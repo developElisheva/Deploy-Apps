@@ -36,7 +36,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/", () => "ToDoApi is running!");
-app.MapGet("/selectAll", async (ToDoDbContext db) =>
+app.MapGet("/getAll", async (ToDoDbContext db) =>
 {
     return await db.Items.ToListAsync();
 });
