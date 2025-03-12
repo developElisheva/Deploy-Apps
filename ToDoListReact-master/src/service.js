@@ -5,34 +5,13 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get("https://todoapi-2l8v.onrender.com/getAll", {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'  // הוסף את הכותרת הזו אם ה-API מצפה לה
-        }
-      });
-      console.log('Raw response:', result.data);  // בדוק את התגובה הגולמית
-
-      console.log("Full API Response:", result);
-      if (result.status === 200) {
-        console.log("Raw response from API:", result.data);
-        if (Array.isArray(result.data) && result.data.length > 0) {
-          return result.data;
-        } else {
-          console.error("Error: API response is empty or not an array!", result.data);
-          return [];
-        }
-      } else {
-        console.error("Error: Received non-OK status code", result.status);
-      }
-      return [];
+      const result = await axios.get(`/selectAll`); // ודא שהנתיב נכון
+      return result.data || []; // מחזיר מערך ריק אם הנתונים הם undefined
     } catch (err) {
-      console.error('Error getting tasks:', err);
-      return [];
+      console.error('שגיאה בהבאת המשימות:', err);
+      return []; // מחזיר מערך ריק במקרה של שגיאה
     }
-  }
-  ,
-
+  },  
 
   addTask: async (name) => {
     console.log('addTask', name)
@@ -49,9 +28,9 @@ export default {
     try {
       const result = await axios.patch(`update/${id}`, isComplete, {
         headers: {
-          'Content-Type': 'application/json'
+            'Content-Type': 'application/json'
         }
-      }); return result.data;
+    });      return result.data;
     } catch (err) {
       console.error('Error setting completion:', err);
     }

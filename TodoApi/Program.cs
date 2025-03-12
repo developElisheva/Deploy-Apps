@@ -1,7 +1,7 @@
 using TodoApi;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +23,7 @@ builder.Services.AddCors(option => option.AddPolicy("AllowAll",//נתינת שם
     .AllowAnyMethod()//כל מתודה - פונקציה
     .AllowAnyHeader()));//וכל כותרת פונקציה
 
+// builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -36,16 +37,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/", () => "ToDoApi is running!");
-// app.MapGet("/getAll", async (ToDoDbContext db) =>
-// {
-//     return await db.Items.ToListAsync();
-// });
-app.MapGet("/getAll", async (ToDoDbContext db) =>
+app.MapGet("/selectAll", async (ToDoDbContext db) =>
 {
-    var items = await db.Items.ToListAsync();
-    return Results.Ok(items); // מחזיר JSON תקין
+    return await db.Items.ToListAsync();
 });
-
 app.MapPost("/add", async (ToDoDbContext db, string Name) =>
 {
     var item = new Item { Name = Name, IsComplete = false };
