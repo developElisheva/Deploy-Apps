@@ -5,13 +5,17 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`/selectAll`); // ודא שהנתיב נכון
+      console.log('Requesting:', `${process.env.REACT_APP_URL}/selectAll`);
+
+      const result = await axios.get(`${process.env.REACT_APP_URL}/selectAll`);
+      console.log('Data received:', result.data);
+
       return result.data || []; // מחזיר מערך ריק אם הנתונים הם undefined
     } catch (err) {
       console.error('שגיאה בהבאת המשימות:', err);
       return []; // מחזיר מערך ריק במקרה של שגיאה
     }
-  },  
+  },
 
   addTask: async (name) => {
     console.log('addTask', name)
@@ -28,9 +32,9 @@ export default {
     try {
       const result = await axios.patch(`update/${id}`, isComplete, {
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         }
-    });      return result.data;
+      }); return result.data;
     } catch (err) {
       console.error('Error setting completion:', err);
     }
