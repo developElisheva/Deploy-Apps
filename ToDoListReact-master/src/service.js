@@ -5,7 +5,7 @@ axios.defaults.baseURL = process.env.REACT_APP_URL;
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`${process.env.REACT_APP_URL}getAll`);
+      const result = await axios.get("https://todoapi-2l8v.onrender.com/getAll");
       console.log("Full API Response:", result);
       if (result.status === 200) {
         console.log("Raw response from API:", result.data);
