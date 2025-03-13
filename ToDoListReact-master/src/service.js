@@ -9,18 +9,34 @@ export default {
       console.log('Fetching tasks from:', `${axios.defaults.baseURL}/selectAll`);
       const result = await axios.get('/selectAll');
       
+      // Log the actual response data to debug
+      console.log('Raw response:', result.data);
+      
       // Ensure we always return an array
       if (Array.isArray(result.data)) {
         console.log('Received data array with length:', result.data.length);
         return result.data;
+      } else if (typeof result.data === 'string') {
+        // Try to parse the string as JSON
+        try {
+          const parsedData = JSON.parse(result.data);
+          if (Array.isArray(parsedData)) {
+            console.log('Successfully parsed string to array with length:', parsedData.length);
+            return parsedData;
+          } else {
+            console.log('Parsed string but result is not an array:', typeof parsedData);
+            return [];
+          }
+        } catch (parseErr) {
+          console.error('Failed to parse response as JSON:', parseErr);
+          return [];
+        }
       } else {
         console.log('API did not return an array, received:', typeof result.data, result.data);
-        // Return empty array as fallback
         return [];
       }
     } catch (err) {
       console.error('Error getting tasks:', err.message, err.response?.data);
-      // Always return an array even on error
       return [];
     }
   },
@@ -39,7 +55,8 @@ export default {
   setCompleted: async (id, isComplete) => {
     console.log('setCompleted', { id, isComplete });
     try {
-      const result = await axios.patch(`/update/${id}`, { isComplete }, {
+      // Sending isComplete directly as the body since the backend expects a boolean
+      const result = await axios.patch(`/update/${id}`, isComplete, {
         headers: {
           'Content-Type': 'application/json'
         }
