@@ -42,17 +42,15 @@ function App() {
       </header>
       <section className="main" style={{ display: "block" }}>
         <ul className="todo-list">
-          {todos.map(todo => {
-            return (
-              <li className={todo.isComplete ? "completed" : ""} key={todo.id}>
-                <div className="view">
-                  <input className="toggle" type="checkbox" defaultChecked={todo.isComplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
-                  <label>{todo.name}</label>
-                  <button className="destroy" onClick={() => deleteTodo(todo.id)}></button>
-                </div>
-              </li>
-            );
-          })}
+          {(Array.isArray(todos) ? todos : []).map(todo => (
+            <li className={todo.isComplete ? "completed" : ""} key={todo.id}>
+              <div className="view">
+                <input className="toggle" type="checkbox" defaultChecked={todo.isComplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
+                <label>{todo.name}</label>
+                <button className="destroy" onClick={() => deleteTodo(todo.id)}></button>
+              </div>
+            </li>
+          ))}
         </ul>
       </section>
     </section >
