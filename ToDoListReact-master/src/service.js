@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://todoapi-2l8v.onrender.com';
+const API_BASE_URL = 'https://todoapi-2l8v.onrender.com/';
 console.log( API_BASE_URL);
 
 const apiClient = axios.create({
@@ -12,10 +12,15 @@ apiClient.interceptors.request.use(config => {
   return config;
 });
 
+apiClient.interceptors.request.use(config => {
+  console.log('Making request to:', config.baseURL + config.url);
+  return config;
+});
+
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get('https://todoapi-2l8v.onrender.com/selectAll');
+      const result = await apiClient.get('/selectAll');
       console.log('Data received from API:', result.data);
 
       let data = result.data;
@@ -76,3 +81,4 @@ export default {
     }
   }
 };
+
