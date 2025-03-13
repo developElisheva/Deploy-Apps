@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 // מגדירים את ה-API_BASE_URL
-const API_BASE_URL = 'https://todoapi-2l8v.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
+console.log('Using API_BASE_URL:', API_BASE_URL);
 
-console.log('REACT_APP_URL:', process.env.REACT_APP_URL);
-
-// יוצרים את apiClient לפני השימוש בו!
 const apiClient = axios.create({
   baseURL: API_BASE_URL
 });
+
+console.log('REACT_APP_URL:', process.env.REACT_APP_URL);
 
 // הוספת Interceptor כדי להדפיס את הכתובת המלאה של כל בקשה
 apiClient.interceptors.request.use(config => {
