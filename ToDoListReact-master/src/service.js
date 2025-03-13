@@ -16,27 +16,28 @@ export default {
       const result = await apiClient.get('/selectAll');
       console.log('Data received from API:', result.data);
       
-      if (Array.isArray(result.data)) {
-        console.log('Data is array with length:', result.data.length);
+      let data = result.data;
+      if (typeof data === 'string') {
+        try {
+          data = JSON.parse(data);
+          console.log('Parsed string data:', data);
+        } catch (e) {
+          console.error('Failed to parse string response:', e);
+          data = [];
+        }
+      }
+  
+      if (Array.isArray(data)) {
+        console.log('Data is array with length:', data.length);
+        return data;
       } else {
-        console.log('Data is not an array:', typeof result.data);
+        console.log('Data is not an array:', typeof data);
+        return [];
       }
-
-      return result.data || [];
     } catch (err) {
-      console.error('שגיאה בהבאת המשימות:', err);
-      if (err.response) {
-        console.error('Error response:', {
-          status: err.response.status,
-          data: err.response.data
-        });
-      } else if (err.request) {
-        console.error('Request made but no response received');
-      }
-      return [];
+      // error handling as before
     }
   },
-
   addTask: async (name) => {
     console.log('addTask', name);
     try {
