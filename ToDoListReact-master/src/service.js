@@ -1,60 +1,38 @@
 import axios from 'axios';
-console.log('🔍 Checking REACT_APP_URL from process.env:', `"${process.env.REACT_APP_URL}"`);
 
-// מגדירים את ה-API_BASE_URL
-const API_BASE_URL = process.env.REACT_APP_URL?.trim() || 'https://todoapi-2l8v.onrender.com';
-console.log('Using API_BASE_URL:', `"${API_BASE_URL}"`); // סוגריים כפולים כדי לראות אם ריק
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL
-});
-
-console.log('REACT_APP_URL:', process.env.REACT_APP_URL);
-
-// הוספת Interceptor כדי להדפיס את הכתובת המלאה של כל בקשה
-apiClient.interceptors.request.use(config => {
-  console.log('Making request to:', config.baseURL + config.url);
-  return config;
-});
-
-// עכשיו אפשר לקרוא ל-API!
-console.log('Fetching tasks from API...');
+axios.defaults.baseURL ='https://todoapi-2l8v.onrender.com';
 
 export default {
   getTasks: async () => {
     try {
-      const result = await apiClient.get('/selectAll');
-      console.log('Raw API response:', result);
-
-      if (!result.data) {
-        console.warn('API returned undefined/null');
-        return [];
-      }
-
+      const result = await axios.get('/selectAll');
       console.log('Data received from API:', result.data);
 
-      if (typeof result.data === 'string') {
-        console.log('Response is a string, trying to parse JSON...');
+      let data = result.data;
+      if (typeof data === 'string') {
         try {
-          result.data = JSON.parse(result.data);
+          data = JSON.parse(data);
+          console.log('Parsed string data:', data);
         } catch (e) {
           console.error('Failed to parse string response:', e);
-          console.error('Response content:', result.data);
-          return [];
+          data = [];
         }
       }
 
-      return Array.isArray(result.data) ? result.data : [];
+      if (Array.isArray(data)) {
+        console.log('Data is array with length:', data.length);
+        return data;
+      } else {
+        console.log('Data is not an array:', typeof data);
+        return [];
+      }
     } catch (err) {
-      console.error('Error fetching tasks:', err);
-      return [];
     }
   },
-
   addTask: async (name) => {
     console.log('addTask', name);
     try {
-      const result = await apiClient.post(`/add?Name=${encodeURIComponent(name)}`);
+      const result = await axios.post(`/add?Name=${encodeURIComponent(name)}`);
       return result.data;
     } catch (err) {
       console.error('Error adding task:', err);
@@ -65,7 +43,7 @@ export default {
   setCompleted: async (id, isComplete) => {
     console.log('setCompleted', { id, isComplete });
     try {
-      const result = await apiClient.patch(`/update/${id}`, isComplete, {
+      const result = await axios.patch(`/update/${id}`, isComplete, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -80,7 +58,7 @@ export default {
   deleteTask: async (id) => {
     console.log('deleteTask', id);
     try {
-      const result = await apiClient.delete(`/delete/${id}`);
+      const result = await axios.delete(`/delete/${id}`);
       return result.data;
     } catch (err) {
       console.error('Error deleting task:', err);
