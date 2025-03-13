@@ -1,24 +1,38 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = process.env.REACT_APP_URL;
+// Set base URL from environment variable
+axios.defaults.baseURL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
 
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get(`selectAll`)
-      return result.data;
+      console.log('Fetching tasks from:', axios.defaults.baseURL + '/selectAll');
+      const result = await axios.get(`selectAll`);
+      
+      // Ensure we always return an array
+      if (Array.isArray(result.data)) {
+        console.log('Received data array with length:', result.data.length);
+        return result.data;
+      } else {
+        console.log('API did not return an array, received:', typeof result.data);
+        // Return empty array as fallback
+        return [];
+      }
     } catch (err) {
       console.error('Error getting tasks:', err);
+      // Always return an array even on error
+      return [];
     }
   },
 
   addTask: async (name) => {
-    console.log('addTask', name)
+    console.log('addTask', name);
     try {
       const result = await axios.post(`add?Name=${encodeURIComponent(name)}`);
       return result.data;
     } catch (err) {
       console.error('Error adding task:', err);
+      return null;
     }
   },
 
@@ -27,22 +41,25 @@ export default {
     try {
       const result = await axios.patch(`update/${id}`, isComplete, {
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         }
-    });      return result.data;
+      });
+      return result.data;
     } catch (err) {
       console.error('Error setting completion:', err);
+      return null;
     }
   },
 
   deleteTask: async (id) => {
     console.log('deleteTask', id);
     try {
-      const result = await axios.delete(`/delete/${id}`);
+      // Fix: Make sure the path is consistent (removing the leading slash)
+      const result = await axios.delete(`delete/${id}`);
       return result.data;
     } catch (err) {
       console.error('Error deleting task:', err);
+      return null;
     }
   }
-
 };
