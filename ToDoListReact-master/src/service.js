@@ -1,10 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL ='https://todoapi-2l8v.onrender.com';
+const API_BASE_URL = 'https://todoapi-2l8v.onrender.com/';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL
 });
+
+apiClient.interceptors.request.use(config => {
+  console.log('🔹 Sending request to:', config.baseURL + config.url);
+  return config;
+});
+
 apiClient.interceptors.request.use(config => {
   console.log('Making request to:', config.baseURL + config.url);
   return config;
