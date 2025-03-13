@@ -15,7 +15,7 @@ export default {
     try {
       const result = await apiClient.get('/selectAll');
       console.log('Data received from API:', result.data);
-
+      
       if (Array.isArray(result.data)) {
         console.log('Data is array with length:', result.data.length);
       } else {
