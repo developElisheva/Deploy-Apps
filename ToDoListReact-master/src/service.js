@@ -13,7 +13,7 @@ apiClient.interceptors.request.use(config => {
 export default {
   getTasks: async () => {
     try {
-      const result = await apiClient.get('/selectAll');
+      const result = await apiClient.get('selectAll');
       console.log('Data received from API:', result.data);
 
       let data = result.data;
