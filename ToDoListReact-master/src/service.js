@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // מגדירים את ה-API_BASE_URL
-const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
-console.log('Using API_BASE_URL:', API_BASE_URL);
+const API_BASE_URL = process.env.REACT_APP_URL?.trim() || 'https://todoapi-2l8v.onrender.com';
+console.log('Using API_BASE_URL:', `"${API_BASE_URL}"`); // סוגריים כפולים כדי לראות אם ריק
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL
