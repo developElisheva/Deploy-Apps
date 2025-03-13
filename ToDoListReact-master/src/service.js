@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://todoapi-2l8v.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
+if (!process.env.REACT_APP_URL) {
+    console.warn("Warning: REACT_APP_URL is not defined, using default URL.");
+}
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL
