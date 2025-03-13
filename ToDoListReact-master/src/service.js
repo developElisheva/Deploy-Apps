@@ -1,6 +1,10 @@
 import axios from 'axios';
 console.log('REACT_APP_URL:', process.env.REACT_APP_URL);
 
+console.log('Fetching tasks from API...');
+const result = await apiClient.get('/selectAll');
+console.log('Response received:', result);
+
 const API_BASE_URL ='https://todoapi-2l8v.onrender.com';
 
 const apiClient = axios.create({
@@ -15,27 +19,30 @@ export default {
   getTasks: async () => {
     try {
       const result = await apiClient.get('/selectAll');
-      console.log('Data received from API:', result.data);
-
-      let data = result.data;
-      if (typeof data === 'string') {
-        try {
-          data = JSON.parse(data);
-          console.log('Parsed string data:', data);
-        } catch (e) {
-          console.error('Failed to parse string response:', e);
-          data = [];
-        }
-      }
-
-      if (Array.isArray(data)) {
-        console.log('Data is array with length:', data.length);
-        return data;
-      } else {
-        console.log('Data is not an array:', typeof data);
+      console.log('Raw API response:', result); // חשוב לבדוק מה באמת מוחזר
+      
+      if (!result.data) {
+        console.warn('API returned undefined/null');
         return [];
       }
+  
+      console.log('Data received from API:', result.data);
+  
+      if (typeof result.data === 'string') {
+        console.log('Response is a string, trying to parse JSON...');
+        try {
+          result.data = JSON.parse(result.data);
+        } catch (e) {
+          console.error('Failed to parse string response:', e);
+          console.error('Response content:', result.data); // תדפיסי את זה כדי לראות מה הוא באמת מחזיר
+          return [];
+        }
+      }
+  
+      return Array.isArray(result.data) ? result.data : [];
     } catch (err) {
+      console.error('Error fetching tasks:', err);
+      return [];
     }
   },
   addTask: async (name) => {
