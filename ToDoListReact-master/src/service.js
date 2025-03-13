@@ -1,51 +1,45 @@
 import axios from 'axios';
 
-// Set base URL from environment variable
-axios.defaults.baseURL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
+// Replace this with the correct base URL
+// Instead of using process.env.REACT_APP_URL which seems to be misconfigured
+const API_BASE_URL = 'https://todoapi-2l8v.onrender.com';
+
+// Create a new axios instance with the correct baseURL
+const apiClient = axios.create({
+  baseURL: API_BASE_URL
+});
+
+// Debug middleware to log all requests
+apiClient.interceptors.request.use(config => {
+  console.log('Making request to:', config.baseURL + config.url);
+  return config;
+});
 
 export default {
   getTasks: async () => {
     try {
-      console.log('Fetching tasks from:', `${axios.defaults.baseURL}/selectAll`);
-      const result = await axios.get('/selectAll');
+      // Use the correct endpoint based on your Swagger documentation
+      const result = await apiClient.get('/selectAll');
+      console.log('Data received from API:', result.data);
       
-      // Log the actual response data to debug
-      console.log('Raw response data:', result.data);
-      
-      // Ensure we always return an array
       if (Array.isArray(result.data)) {
-        console.log('Received data array with length:', result.data.length);
-        return result.data.map(item => ({
-          id: item.id,
-          name: item.name,
-          isComplete: item.isComplete === true
-        }));
-      } else if (typeof result.data === 'string') {
-        // Try to parse the string as JSON
-        try {
-          const parsedData = JSON.parse(result.data);
-          if (Array.isArray(parsedData)) {
-            console.log('Successfully parsed string to array with length:', parsedData.length);
-            return parsedData.map(item => ({
-              id: item.Id,  // Note the capital I
-              name: item.Name,  // Note the capital N
-              isComplete: item.IsComplete === true  // Note the capital I and C
-            }));
-          } else {
-            console.log('Parsed string but result is not an array:', typeof parsedData);
-            return [];
-          }
-        } catch (parseErr) {
-          console.error('Failed to parse response as JSON:', parseErr);
-          return [];
-        }
+        console.log('Data is array with length:', result.data.length);
       } else {
-        console.log('API did not return an array, received:', typeof result.data, result.data);
-        return [];
+        console.log('Data is not an array:', typeof result.data);
       }
+
+      return result.data || [];
     } catch (err) {
-      console.error('Error getting tasks:', err.message);
-      console.error('Error details:', err.response?.data);
+      console.error('שגיאה בהבאת המשימות:', err);
+      // Log more details about the error
+      if (err.response) {
+        console.error('Error response:', {
+          status: err.response.status,
+          data: err.response.data
+        });
+      } else if (err.request) {
+        console.error('Request made but no response received');
+      }
       return [];
     }
   },
@@ -53,12 +47,10 @@ export default {
   addTask: async (name) => {
     console.log('addTask', name);
     try {
-      const result = await axios.post(`/add?Name=${encodeURIComponent(name)}`);
-      console.log('Add task response:', result.data);
+      const result = await apiClient.post(`/add?Name=${encodeURIComponent(name)}`);
       return result.data;
     } catch (err) {
-      console.error('Error adding task:', err.message);
-      console.error('Error details:', err.response?.data);
+      console.error('Error adding task:', err);
       return null;
     }
   },
@@ -66,17 +58,14 @@ export default {
   setCompleted: async (id, isComplete) => {
     console.log('setCompleted', { id, isComplete });
     try {
-      // Send as JSON payload since the API expects a boolean value
-      const result = await axios.patch(`/update/${id}`, isComplete, {
+      const result = await apiClient.patch(`/update/${id}`, isComplete, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      console.log('Update task response:', result.data);
       return result.data;
     } catch (err) {
-      console.error('Error setting completion:', err.message);
-      console.error('Error details:', err.response?.data, err.response?.status);
+      console.error('Error setting completion:', err);
       return null;
     }
   },
@@ -84,12 +73,10 @@ export default {
   deleteTask: async (id) => {
     console.log('deleteTask', id);
     try {
-      const result = await axios.delete(`/delete/${id}`);
-      console.log('Delete task response:', result.data);
+      const result = await apiClient.delete(`/delete/${id}`);
       return result.data;
     } catch (err) {
-      console.error('Error deleting task:', err.message);
-      console.error('Error details:', err.response?.data);
+      console.error('Error deleting task:', err);
       return null;
     }
   }
