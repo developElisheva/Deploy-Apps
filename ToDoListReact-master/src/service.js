@@ -1,9 +1,5 @@
 import axios from 'axios';
-
-console.log('REACT_APP_URL from env:', process.env.REACT_APP_URL);
-
-const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
-console.log('Using API base URL:', API_BASE_URL);
+const API_BASE_URL = process.env.REACT_APP_URL;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL
@@ -18,6 +14,7 @@ export default {
   getTasks: async () => {
     try {
       const result = await apiClient.get('/selectAll');
+      console.log('Data received from API:', result.data);
       return result.data || [];
     } catch (err) {
       console.error('שגיאה בהבאת המשימות:', err);
