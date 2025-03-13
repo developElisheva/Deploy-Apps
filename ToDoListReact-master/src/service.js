@@ -1,11 +1,15 @@
 import axios from 'axios';
 
-axios.defaults.baseURL ='https://todoapi-2l8v.onrender.com';
+const API_BASE_URL ='https://todoapi-2l8v.onrender.com';
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL
+});
 
 export default {
   getTasks: async () => {
     try {
-      const result = await axios.get('/selectAll');
+      const result = await apiClient.get('/selectAll');
       console.log('Data received from API:', result.data);
 
       let data = result.data;
@@ -32,7 +36,7 @@ export default {
   addTask: async (name) => {
     console.log('addTask', name);
     try {
-      const result = await axios.post(`/add?Name=${encodeURIComponent(name)}`);
+      const result = await apiClient.post(`/add?Name=${encodeURIComponent(name)}`);
       return result.data;
     } catch (err) {
       console.error('Error adding task:', err);
@@ -43,7 +47,7 @@ export default {
   setCompleted: async (id, isComplete) => {
     console.log('setCompleted', { id, isComplete });
     try {
-      const result = await axios.patch(`/update/${id}`, isComplete, {
+      const result = await apiClient.patch(`/update/${id}`, isComplete, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -58,7 +62,7 @@ export default {
   deleteTask: async (id) => {
     console.log('deleteTask', id);
     try {
-      const result = await axios.delete(`/delete/${id}`);
+      const result = await apiClient.delete(`/delete/${id}`);
       return result.data;
     } catch (err) {
       console.error('Error deleting task:', err);
