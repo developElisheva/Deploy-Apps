@@ -1,4 +1,5 @@
 import axios from 'axios';
+console.log('🔍 Checking REACT_APP_URL from process.env:', `"${process.env.REACT_APP_URL}"`);
 
 // מגדירים את ה-API_BASE_URL
 const API_BASE_URL = process.env.REACT_APP_URL?.trim() || 'https://todoapi-2l8v.onrender.com';
