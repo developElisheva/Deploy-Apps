@@ -1,10 +1,6 @@
 import axios from 'axios';
-console.log('REACT_APP_URL:', process.env.REACT_APP_URL);
 
-const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
-if (!process.env.REACT_APP_URL) {
-    console.warn("Warning: REACT_APP_URL is not defined, using default URL.");
-}
+const API_BASE_URL ='https://todoapi-2l8v.onrender.com';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL
@@ -17,9 +13,9 @@ apiClient.interceptors.request.use(config => {
 export default {
   getTasks: async () => {
     try {
-      const result = await apiClient.get('/selectAll');
+      const result = await apiClient.get('selectAll');
       console.log('Data received from API:', result.data);
-      
+
       let data = result.data;
       if (typeof data === 'string') {
         try {
@@ -30,7 +26,7 @@ export default {
           data = [];
         }
       }
-  
+
       if (Array.isArray(data)) {
         console.log('Data is array with length:', data.length);
         return data;
@@ -39,7 +35,6 @@ export default {
         return [];
       }
     } catch (err) {
-      // error handling as before
     }
   },
   addTask: async (name) => {
