@@ -1,66 +1,56 @@
 import axios from 'axios';
 
-// בסביבת פיתוח
-const API_BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'https://todoapi-2l8v.onrender.com'
-  : '';console.log( API_BASE_URL);
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL
-});
-
-apiClient.interceptors.request.use(config => {
-  console.log('🔹 Sending request to:', config.baseURL + config.url);
-  return config;
-});
+// תמיד להשתמש ב-URL המלא
+const API_BASE_URL = 'https://todoapi-2l8v.onrender.com';
 
 export default {
   getTasks: async () => {
     try {
-      // שימוש ב-fetch במקום axios
       const response = await fetch(`${API_BASE_URL}/selectAll`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log('Data received from API:', data);
+      if (!response.ok) return [];
       
-      if (Array.isArray(data)) {
-        return data;
-      } else {
-        console.warn('Data is not an array:', typeof data);
-        return [];
-      }
+      const text = await response.text();
+      if (!text) return [];
+      
+      const data = JSON.parse(text);
+      return Array.isArray(data) ? data : [];
     } catch (err) {
-      console.error('Error fetching tasks:', err);
       return [];
     }
   },
   
-  setCompleted: async (id, isComplete) => {
-    console.log('setCompleted', { id, isComplete });
+  addTask: async (name) => {
     try {
-      const result = await apiClient.patch(`/update/${id}`, isComplete, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      const response = await fetch(`${API_BASE_URL}/add?Name=${encodeURIComponent(name)}`, {
+        method: 'POST'
       });
-      return result.data;
+      return response.ok;
     } catch (err) {
-      console.error('Error setting completion:', err);
-      return null;
+      return false;
     }
   },
-
-  deleteTask: async (id) => {
-    console.log('deleteTask', id);
+  
+  setCompleted: async (id, isComplete) => {
     try {
-      const result = await apiClient.delete(`/delete/${id}`);
-      return result.data;
+      const response = await fetch(`${API_BASE_URL}/update/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(isComplete)
+      });
+      return response.ok;
     } catch (err) {
-      console.error('Error deleting task:', err);
-      return null;
+      return false;
+    }
+  },
+  
+  deleteTask: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/delete/${id}`, {
+        method: 'DELETE'
+      });
+      return response.ok;
+    } catch (err) {
+      return false;
     }
   }
 };
-
