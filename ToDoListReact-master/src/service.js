@@ -1,4 +1,5 @@
 import axios from 'axios';
+console.log('REACT_APP_URL:', process.env.REACT_APP_URL);
 
 const API_BASE_URL = process.env.REACT_APP_URL || 'https://todoapi-2l8v.onrender.com';
 if (!process.env.REACT_APP_URL) {
