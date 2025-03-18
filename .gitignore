@@ -1,2 +1,4 @@
 "node_modules/" 
 ".vs/" 
+"appsettings.jsons"
+"appsettings.Development.json"
