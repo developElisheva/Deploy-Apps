@@ -1,56 +1,48 @@
 import axios from 'axios';
 
-// תמיד להשתמש ב-URL המלא
-const API_BASE_URL = 'https://todoapi-2l8v.onrender.com';
+axios.defaults.baseURL = process.env.REACT_APP_URL;
 
 export default {
   getTasks: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/selectAll`);
-      if (!response.ok) return [];
-      
-      const text = await response.text();
-      if (!text) return [];
-      
-      const data = JSON.parse(text);
-      return Array.isArray(data) ? data : [];
+      const result = await axios.get(`selectAll`)
+      return result.data;
     } catch (err) {
-      return [];
+      console.error('Error getting tasks:', err);
     }
   },
-  
+
   addTask: async (name) => {
+    console.log('addTask', name)
     try {
-      const response = await fetch(`${API_BASE_URL}/add?Name=${encodeURIComponent(name)}`, {
-        method: 'POST'
-      });
-      return response.ok;
+      const result = await axios.post(`add?Name=${encodeURIComponent(name)}`);
+      return result.data;
     } catch (err) {
-      return false;
+      console.error('Error adding task:', err);
     }
   },
-  
+
   setCompleted: async (id, isComplete) => {
+    console.log('setCompleted', { id, isComplete });
     try {
-      const response = await fetch(`${API_BASE_URL}/update/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(isComplete)
-      });
-      return response.ok;
+      const result = await axios.patch(`update/${id}`, isComplete, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });      return result.data;
     } catch (err) {
-      return false;
+      console.error('Error setting completion:', err);
     }
   },
-  
+
   deleteTask: async (id) => {
+    console.log('deleteTask', id);
     try {
-      const response = await fetch(`${API_BASE_URL}/delete/${id}`, {
-        method: 'DELETE'
-      });
-      return response.ok;
+      const result = await axios.delete(`/delete/${id}`);
+      return result.data;
     } catch (err) {
-      return false;
+      console.error('Error deleting task:', err);
     }
   }
+
 };

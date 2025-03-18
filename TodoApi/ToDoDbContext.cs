@@ -20,17 +20,9 @@ public partial class ToDoDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    //     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-    //         => optionsBuilder.UseMySql("server=localhost;database=ToDoDB;user=root;password=eli@2107", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.41-mysql"));
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseMySql(
-            "server=btvqhj0fvvfga3aibazw-mysql.services.clever-cloud.com;database=btvqhj0fvvfga3aibazw;user=uo3ow8vbc7blfkf3;password=2u4UKfA8FmRVVvwQy8qh",
-            Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.41-mysql"),
-            mySqlOptions => mySqlOptions.EnableRetryOnFailure()  // הוספת האפשרות לשחזור אוטומטי במקרה של כשל זמני
-        );
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=basfhys3m2dbtfwlonrg-mysql.services.clever-cloud.com;port=3306;user=uxcaabjhnz7pqer1;password=AAAu83MZLtSpNKjdPlW2;database=basfhys3m2dbtfwlonrg;", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.41-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,15 +45,9 @@ public partial class ToDoDbContext : DbContext
 
             entity.ToTable("users");
 
-            entity.Property(e => e.Email)
-                .HasMaxLength(100)
-                .HasColumnName("email");
-            entity.Property(e => e.Name)
-                .HasMaxLength(45)
-                .HasColumnName("name");
-            entity.Property(e => e.Passwod)
-                .HasMaxLength(45)
-                .HasColumnName("passwod");
+            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.Nmae).HasMaxLength(50);
+            entity.Property(e => e.Password).HasMaxLength(45);
         });
 
         OnModelCreatingPartial(modelBuilder);
