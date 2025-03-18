@@ -17,8 +17,23 @@ builder.Services.AddDbContext<ToDoDbContext>(options =>
     new MySqlServerVersion(new Version(8, 0, 41)),
     mySqlOptions => mySqlOptions.EnableRetryOnFailure()));
 
-// בדיקת חיבור למסד הנתונים
+// הוספת ה-CORS לפני קריאת builder.Build()
+builder.Services.AddCors(option => option.AddPolicy("AllowAll", //נתינת שם להרשאה
+    p => p.AllowAnyOrigin() //מאפשר כל מקור
+    .AllowAnyMethod() //כל מתודה - פונקציה
+    .AllowAnyHeader())); //וכל כותרת פונקציה
+
+builder.Logging.AddConsole();
+builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+});
+
 var app = builder.Build();
+
+// בדיקת חיבור למסד הנתונים
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ToDoDbContext>();
@@ -32,19 +47,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"❌ חיבור למסד הנתונים נכשל: {ex.Message}");
     }
 }
-
-builder.Logging.AddConsole();
-builder.Services.AddCors(option => option.AddPolicy("AllowAll", //נתינת שם להרשאה
-    p => p.AllowAnyOrigin() //מאפשר כל מקור
-    .AllowAnyMethod() //כל מתודה - פונקציה
-    .AllowAnyHeader())); //וכל כותרת פונקציה
-
-builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-});
 
 app.UseCors("AllowAll");
 app.UseSwagger();
